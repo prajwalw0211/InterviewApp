@@ -1,5 +1,6 @@
 "use client";
 import { db } from "@/utils/db";
+import { use } from "react";
 import React, { useEffect, useState } from "react";
 import { MockInterview } from "@/utils/schema";
 import { eq } from "drizzle-orm";
@@ -9,10 +10,10 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 function Interview({ params }) {
+  const { interviewId } = use(params);
   const [interviewData, setInterviewData] = useState();
   const [webCamEnabled, setWebCamEnabled] = useState(false);
   useEffect(() => {
-    // console.log(params);
     GetInterviewDetails();
   }, []);
 
@@ -20,7 +21,7 @@ function Interview({ params }) {
     const result = await db
       .select()
       .from(MockInterview)
-      .where(eq(MockInterview.mockId, params.interviewId));
+      .where(eq(MockInterview.mockId, interviewId));
 
     // console.log(result);
     setInterviewData(result[0]);
@@ -81,7 +82,7 @@ function Interview({ params }) {
         </div>
       </div>
       <div className="flex justify-end items-end">
-        <Link href={"/dashboard/interview/" + params.interviewId + "/start"}>
+        <Link href={"/dashboard/interview/" + interviewId + "/start"}>
           <Button>Start Interview</Button>
         </Link>
       </div>

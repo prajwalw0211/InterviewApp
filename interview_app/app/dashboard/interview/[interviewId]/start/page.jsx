@@ -1,5 +1,6 @@
 "use client";
 import { db } from "@/utils/db";
+import { use } from "react";
 import { MockInterview } from "@/utils/schema";
 import { eq } from "drizzle-orm";
 import React, { useEffect, useState } from "react";
@@ -13,7 +14,7 @@ function StartInterview(params) {
   const [interviewQuestions, setInterviewQuestions] = useState();
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
   const [userAnswer, setUserAnswer] = useState("");
-
+  const { interviewId } = use(params.params);
   useEffect(() => {
     GetInterviewDetails();
   }, []);
@@ -22,7 +23,7 @@ function StartInterview(params) {
     const result = await db
       .select()
       .from(MockInterview)
-      .where(eq(MockInterview.mockId, params.params.interviewId));
+      .where(eq(MockInterview.mockId, interviewId));
 
     const jsonMockResp = JSON.parse(
       result[0].jsonMockResp.replace(/\\'/g, "'")
