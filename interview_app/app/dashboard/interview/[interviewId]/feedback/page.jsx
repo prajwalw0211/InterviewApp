@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { use } from "react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -14,6 +15,7 @@ import React, { useEffect, useState } from "react";
 
 function Feedback(params) {
   const [feedbackList, setFeedbackList] = useState([]);
+  const { interviewId } = use(params.params);
 
   const router = useRouter();
 
@@ -25,7 +27,7 @@ function Feedback(params) {
     const result = await db
       .select()
       .from(UserAnswer)
-      .where(eq(UserAnswer.mockIdRef, params.params.interviewId))
+      .where(eq(UserAnswer.mockIdRef, interviewId))
       .orderBy(UserAnswer.id);
 
     setFeedbackList(result);
