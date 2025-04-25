@@ -1,4 +1,3 @@
-"use client";
 // import { Button } from "@/components/ui/button";
 // import { toast } from "sonner";
 // import {
@@ -159,7 +158,7 @@
 // }
 
 // export default RecordAnswerSection;
-
+"use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -171,6 +170,8 @@ import {
   StopCircle,
   WebcamIcon,
 } from "lucide-react";
+import dynamic from "next/dynamic"; // Import dynamic for SSR handling
+
 import Webcam from "react-webcam";
 import useSpeechToText from "react-hook-speech-to-text";
 import MicRecorder from "mic-recorder-to-mp3";
@@ -183,6 +184,7 @@ import { useUser } from "@clerk/nextjs";
 
 const ASSEMBLYAI_UPLOAD_URL = "https://api.assemblyai.com/v2/upload";
 const ASSEMBLYAI_TRANSCRIPT_URL = "https://api.assemblyai.com/v2/transcript";
+const ASSEMBLYAI_API_KEY = process.env.NEXT_PUBLIC_ASSEMBLYAI_API_KEY;
 
 const RecordAnswerSection = ({
   userAnswer,
@@ -196,6 +198,11 @@ const RecordAnswerSection = ({
   const [loading, setLoading] = useState(false);
   const [recorder] = useState(new MicRecorder({ bitRate: 128 }));
   const [audioUrl, setAudioUrl] = useState(null);
+  const [confidence, setConfidence] = useState(null);
+  const [sentiment, setSentiment] = useState(null);
+  const [fillerWords, setFillerWords] = useState({});
+  const [adjustedConfidence, setAdjustedConfidence] = useState(null);
+  const [totalFillerCount, setTotalFillerCount] = useState(0);
 
   const {
     error,
@@ -208,9 +215,8 @@ const RecordAnswerSection = ({
     continuous: true,
     useLegacyResults: false,
   });
-
   useEffect(() => {
-    if (results.length > 0) {
+    if (Array.isArray(results) && results.length > 0) {
       const latestTranscript = results[results.length - 1]?.transcript;
       setUserAnswer((prevAns) => prevAns + latestTranscript);
     }
@@ -239,14 +245,42 @@ const RecordAnswerSection = ({
         { headers }
       );
       const result = response.data;
-      console.log(result.data);
 
       if (result.status === "completed") {
+        setConfidence(result.confidence);
+        setSentiment(result.sentiment_analysis_results[0]?.sentiment);
         return result;
       } else if (result.status === "failed") {
         throw new Error("Transcription failed");
       }
       await new Promise((resolve) => setTimeout(resolve, 5000));
+    }
+  };
+
+  const sendAudioToBackend = async (file) => {
+    const formData = new FormData();
+    formData.append("audio", file);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/upload",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      if (response.data) {
+        // setUserAnswer(response.data.transcription); // Update transcribed text
+        setFillerWords(response.data.filler_words); // Store filler word counts
+        setTotalFillerCount(response.data.total_filler_count);
+
+        toast(
+          `Filler words detected: ${JSON.stringify(response.data.filler_words)}`
+        );
+      }
+    } catch (error) {
+      console.error("Error sending audio to backend:", error);
     }
   };
 
@@ -257,7 +291,7 @@ const RecordAnswerSection = ({
       const file = new File(buffer, "recording.mp3", { type: blob.type });
       const audioUrl = URL.createObjectURL(file);
       setAudioUrl(audioUrl);
-
+      sendAudioToBackend(file);
       if (results[results.length - 1]?.transcript?.length < 10) {
         toast("Error while saving your answer, please record again");
       } else {
@@ -266,14 +300,20 @@ const RecordAnswerSection = ({
           const transcriptionId = await transcribeWithAssemblyAI(
             assemblyAiAudioUrl
           );
-          console.log("h");
           const transcriptionResult = await getAssemblyAIResults(
             transcriptionId
           );
 
-          console.log("AssemblyAI Transcription Result:", transcriptionResult);
+          console.log(
+            "AssemblyAI confidence Result:",
+            transcriptionResult.confidence
+          );
           const transcriptText = transcriptionResult.text;
           setUserAnswer(transcriptText);
+          // const computedConfidence =
+          //   transcriptionResult.confidence - 1.5 * totalFillerCount;
+          // setAdjustedConfidence(computedConfidence);
+          // console.log(adjustedConfidence);
         } catch (error) {
           console.error("Error with AssemblyAI:", error.message);
         }
@@ -284,6 +324,14 @@ const RecordAnswerSection = ({
       setUserAnswer("");
     }
   };
+
+  useEffect(() => {
+    if (confidence !== null && totalFillerCount !== null) {
+      console.log(totalFillerCount);
+      const computedConfidence = confidence - 1.5 * (totalFillerCount / 100);
+      setAdjustedConfidence(computedConfidence);
+    }
+  }, [confidence, totalFillerCount]);
 
   const submitUserAnswer = async () => {
     setLoading(true);
@@ -303,10 +351,12 @@ const RecordAnswerSection = ({
   `;
 
     const result = await chatSession.sendMessage(feedbackPrompt);
+    // console.log(result.response.text());
     const jsonMockResp = result.response
       .text()
-      .replace("json", "")
-      .replace("", "");
+      .replace("```json", "")
+      .replace("```", "");
+    // console.log(jsonMockResp);
     const JsonFeedbackResp = JSON.parse(jsonMockResp);
 
     const resp = await db.insert(UserAnswer).values({
@@ -320,6 +370,8 @@ const RecordAnswerSection = ({
       userAns: userAnswer,
       feedback: JsonFeedbackResp?.feedback,
       rating: JsonFeedbackResp?.rating,
+      fillerWords: JSON.stringify(fillerWords),
+      confidence: adjustedConfidence,
       userEmail: user?.primaryEmailAddress?.emailAddress,
       createdAt: moment().format("DD-MM-yyyy"),
       missedKeywords: JsonFeedbackResp?.missed_keywords,
@@ -382,11 +434,36 @@ const RecordAnswerSection = ({
         </Button>
       </div>
       {audioUrl && (
-        <div className="mt-5">
+        <div className="mt-5 flex gap-3">
           <audio controls src={audioUrl}></audio>
           <a href={audioUrl} download="recording.mp3">
-            Download Recording
+            <Button className="mt-2" variant="secondary">
+              ⬇️ Download Recording
+            </Button>
           </a>
+        </div>
+      )}
+      {Object.keys(fillerWords).length > 0 && (
+        <div className="my-4 p-4 border rounded-lg shadow-md bg-gray-100">
+          <h3 className="font-bold">Filler Word Counts:</h3>
+          <ul className="list-disc ml-5">
+            {Object.entries(fillerWords).map(([word, count]) => (
+              <li key={word}>
+                {word}: <span className="font-semibold">{count}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {adjustedConfidence !== null && (
+        <div className="my-4 p-4 border rounded-lg shadow-md bg-gray-100">
+          <p>
+            <strong>Confidence:</strong>{" "}
+            {adjustedConfidence !== null
+              ? adjustedConfidence.toFixed(2)
+              : "Calculating..."}
+          </p>
         </div>
       )}
     </div>

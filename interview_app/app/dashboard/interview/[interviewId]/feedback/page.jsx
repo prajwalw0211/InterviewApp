@@ -76,14 +76,38 @@ function Feedback(params) {
                       <strong>Feedback: </strong>
                       {item.feedback} <br />
                       <strong>Missed Keywords: </strong>
-                      <ul>
+                      <p>
                         {item.missedKeywords
+                          ?.replace(/{|}/g, "")
                           .split(",")
                           .map((keyword, index) => (
-                            <li key={index}>{keyword.trim()}</li>
+                            <li key={index}>
+                              {keyword.replace(/"/g, "").trim()}
+                            </li>
                           ))}
-                      </ul>
+                      </p>
                     </h2>
+                    {item.confidence && (
+                      <h2 className="p-2 border rounded-lg bg-yellow-50 text-sm text-yellow-800">
+                        <strong>Confidence Score: </strong>{" "}
+                        {Number(item.confidence).toFixed(2)}
+                      </h2>
+                    )}
+
+                    {item.fillerWords && (
+                      <div className="p-2 border rounded-lg bg-gray-100 text-sm">
+                        <strong>Filler Words:</strong>
+                        <ul className="list-disc ml-4 mt-1">
+                          {Object.entries(JSON.parse(item.fillerWords))
+                            .filter(([_, count]) => count > 0)
+                            .map(([word, count]) => (
+                              <li key={word}>
+                                {word}: <strong>{count}</strong>
+                              </li>
+                            ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 </CollapsibleContent>
               </Collapsible>
