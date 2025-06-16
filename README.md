@@ -59,8 +59,6 @@ The goal is to improve candidates' preparedness and boost confidence before faci
 
 The project is a **full-stack AI-powered interview preparation platform** with the following major components:
 
----
-
 ### 1. **Frontend (Next.js + Clerk + Drizzle ORM)**
 
 * Built with **Next.js** and **React**
@@ -69,8 +67,6 @@ The project is a **full-stack AI-powered interview preparation platform** with t
 * Uses **Drizzle ORM** for database operations
 * Communicates with Flask backend and AI APIs for evaluation
 
----
-
 ### 2. **Backend (Python Flask)**
 
 * Developed using **Flask**
@@ -78,8 +74,6 @@ The project is a **full-stack AI-powered interview preparation platform** with t
 * Provides API endpoints consumed by the frontend
 * **CORS enabled** to allow secure cross-origin requests
 * Uses **Whisper (OpenAI)** for transcribing audio and detecting filler words like *"um"*, *"ah"*, *"uh"*
-
----
 
 ### 3. **AI Services**
 
@@ -97,8 +91,6 @@ The project is a **full-stack AI-powered interview preparation platform** with t
 * *(Planned but not yet implemented)* **AssemblyAI**:
 
   * Intended for **confidence and emotion detection** in future versions
-
----
 
 ### 4. **Database (Neon + Drizzle ORM)**
 
@@ -122,8 +114,6 @@ git clone https://github.com/your-username/interview-enhancement-system.git
 cd interview-enhancement-system
 npm install
 ```
-
----
 
 ### 2. **Frontend Setup (Next.js + Clerk + Drizzle + Neon)**
 
@@ -177,8 +167,6 @@ python server.py
 
 Ensure Flask runs at `http://localhost:5000` and has **CORS enabled** to allow communication with the frontend.
 
----
-
 ### 4. **Database Setup (Drizzle ORM + Neon DB)**
 
 Neon is a fully managed PostgreSQL database in the cloud. Drizzle ORM connects to Neon using your connection string from `.env.local`.
@@ -207,8 +195,6 @@ Update your `package.json` with custom scripts for convenience:
 }
 ```
 
----
-
 ### 5. **Usage Workflow**
 
 * Register/Login using **Clerk**
@@ -222,3 +208,11 @@ Update your `package.json` with custom scripts for convenience:
   * Confidence score
   * Quality of answers (via Gemini)
 * View performance and feedback on the dashboard
+
+---
+
+## Project Team
+
+- **Shubham Pandharinath Gunjal** 
+- **Hariom Awanish Shukla**   
+- **Prajwal Arun Waghmode** 
