@@ -1,60 +1,61 @@
-# Interview Enhancement System 🎤🧠
+# Interview Enhancement System
 
 An AI-powered web platform to help users practice and improve their interview skills through personalized mock interviews, real-time feedback, and performance analytics.
 
 ---
 
-## 🚀 Introduction
+## Introduction
 
 In today’s competitive job market, cracking interviews requires more than just knowledge — communication, confidence, and clarity of speech are equally important. The **Interview Enhancement System** is a web-based tool designed to simulate real interview scenarios and provide actionable feedback using modern AI technologies.
 
 It allows users to:
 
-- Select a job role and topics of interest
-- Record voice answers to AI-generated questions
-- Receive a detailed analysis of their performance including scores, filler word count, fluency, and keyword suggestions
+* Select a job role and topics of interest
+* Record voice answers to AI-generated questions
+* Receive a detailed analysis of their performance including scores, filler word count, fluency, and keyword suggestions
 
 The goal is to improve candidates' preparedness and boost confidence before facing real interviews.
 
 ---
 
-## ✨ Features
+## Features
 
-- 🎯 **Role-Based Question Generation** using Gemini AI
-- 🎤 **Voice Recording and Transcription** using React Hook Speech-to-Text
-- 📊 **Real-Time Answer Evaluation**
-  - Scoring by Gemini AI
-  - Filler word detection via Whisper
-  - Fluency & confidence scoring via Assembly AI
-- 📈 **Performance Tracking Dashboard**
-- 🔒 **Secure User Authentication** via Clerk
-- 📁 **Modern UI** with responsive React-based frontend
+* **Role-Based Question Generation** using Gemini AI
+* **Voice Recording and Transcription** using React Hook Speech-to-Text
+* **Real-Time Answer Evaluation**
 
----
-
-## 🛠 Technologies Used
-
-### 🌐 Frontend
-
-- **Next.js 15** – React-based framework for building modern, full-stack web applications.
-- **Clerk** – Authentication and user management (sign-up, login, session handling).
-- **Drizzle ORM + Neon DB** – Type-safe ORM for interacting with PostgreSQL hosted on Neon.
-- **Tailwind CSS** – Utility-first CSS framework for styling.
-
-### 🧠 Backend
-
-- **Python Flask** – Lightweight Python web framework to handle API requests.
-- **OpenAI Whisper** – For transcribing audio and detecting filler words in user responses.
-- **Flask-CORS** – To allow frontend-backend communication (cross-origin requests).
-
-### 🧰 Dev Tools & Services
-
-- **PostgreSQL (Neon)** – Serverless, scalable cloud Postgres database.
-- **Gemini API** – For question generation and feedback scoring.
+  * Scoring by Gemini AI
+  * Filler word detection via Whisper
+  * Fluency & confidence scoring via Assembly AI
+* **Performance Tracking Dashboard**
+* **Secure User Authentication** via Clerk
+* **Modern UI** with responsive React-based frontend
 
 ---
 
-## 🧠 System Architecture
+## Technologies Used
+
+### Frontend
+
+* **Next.js 15** – React-based framework for building modern, full-stack web applications.
+* **Clerk** – Authentication and user management (sign-up, login, session handling).
+* **Drizzle ORM + Neon DB** – Type-safe ORM for interacting with PostgreSQL hosted on Neon.
+* **Tailwind CSS** – Utility-first CSS framework for styling.
+
+### Backend
+
+* **Python Flask** – Lightweight Python web framework to handle API requests.
+* **OpenAI Whisper** – For transcribing audio and detecting filler words in user responses.
+* **Flask-CORS** – To allow frontend-backend communication (cross-origin requests).
+
+### Dev Tools & Services
+
+* **PostgreSQL (Neon)** – Serverless, scalable cloud Postgres database.
+* **Gemini API** – For question generation and feedback scoring.
+
+---
+
+## System Architecture
 
 The project is a **full-stack AI-powered interview preparation platform** with the following major components:
 
@@ -62,55 +63,57 @@ The project is a **full-stack AI-powered interview preparation platform** with t
 
 ### 1. **Frontend (Next.js + Clerk + Drizzle ORM)**
 
-- Built with **Next.js** and **React**
-- UI for job selection, mock interview, audio recording, feedback viewing
-- **Clerk** handles **user authentication and session management**
-- Uses **Drizzle ORM** for database operations
-- Communicates with Flask backend and AI APIs for evaluation
+* Built with **Next.js** and **React**
+* UI for job selection, mock interview, audio recording, feedback viewing
+* **Clerk** handles **user authentication and session management**
+* Uses **Drizzle ORM** for database operations
+* Communicates with Flask backend and AI APIs for evaluation
 
 ---
 
 ### 2. **Backend (Python Flask)**
 
-- Developed using **Flask**
-- Handles audio processing and filler word detection
-- Provides API endpoints consumed by the frontend
-- **CORS enabled** to allow secure cross-origin requests
-- Uses **Whisper (OpenAI)** for transcribing audio and detecting filler words like _"um"_, _"ah"_, _"uh"_
+* Developed using **Flask**
+* Handles audio processing and filler word detection
+* Provides API endpoints consumed by the frontend
+* **CORS enabled** to allow secure cross-origin requests
+* Uses **Whisper (OpenAI)** for transcribing audio and detecting filler words like *"um"*, *"ah"*, *"uh"*
 
 ---
 
 ### 3. **AI Services**
 
-- **Gemini API (Google)**:
+* **Gemini API (Google)**:
 
-  - Generates domain-specific interview questions
-  - Evaluates user answers (semantic quality, relevance)
-  - Returns feedback and keyword suggestions
+  * Generates domain-specific interview questions
+  * Evaluates user answers (semantic quality, relevance)
+  * Returns feedback and keyword suggestions
 
-- **Whisper (OpenAI)**:
+* **Whisper (OpenAI)**:
 
-  - Transcribes spoken audio
-  - Identifies and counts **filler words** for fluency scoring
+  * Transcribes spoken audio
+  * Identifies and counts **filler words** for fluency scoring
 
-- _(Planned but not yet implemented)_ **AssemblyAI**:
-  - Intended for **confidence and emotion detection** in future versions
+* *(Planned but not yet implemented)* **AssemblyAI**:
+
+  * Intended for **confidence and emotion detection** in future versions
 
 ---
 
 ### 4. **Database (Neon + Drizzle ORM)**
 
-- **Neon**: Scalable cloud PostgreSQL solution
-- **Drizzle ORM**: Type-safe SQL toolkit for managing schema and migrations
-- Stores:
-  - User answers
-  - Mock interview attempts
-  - Feedback, ratings, and keywords
-  - Interview history for progress tracking
+* **Neon**: Scalable cloud PostgreSQL solution
+* **Drizzle ORM**: Type-safe SQL toolkit for managing schema and migrations
+* Stores:
+
+  * User answers
+  * Mock interview attempts
+  * Feedback, ratings, and keywords
+  * Interview history for progress tracking
 
 ---
 
-## 🧾 How to Use
+## How to Use
 
 ### 1. Clone the repo and install dependencies
 
@@ -129,7 +132,7 @@ cd interview_app
 npm install
 ```
 
-📝 Create a `.env.local` file inside the `interview_app` directory and add:
+Create a `.env.local` file inside the `interview_app` directory and add:
 
 ```env
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_key_here   # Clerk Pushable key
@@ -149,7 +152,7 @@ NEXT_PUBLIC_INFORMATION="To start your AI-generated mock interview, please enabl
 NEXT_PUBLIC_QUESTION_NOTE="Click on Record Answer when you want to answer the question. At the end of interview we will give you the feedback along with correct answer for each of question and your answer to compare it"
 ```
 
-✅ Start the frontend server:
+Start the frontend server:
 
 ```bash
 npm run dev
@@ -172,7 +175,7 @@ Start the Flask server:
 python server.py
 ```
 
-🛠️ Ensure Flask runs at `http://localhost:5000` and has **CORS enabled** to allow communication with the frontend.
+Ensure Flask runs at `http://localhost:5000` and has **CORS enabled** to allow communication with the frontend.
 
 ---
 
@@ -192,7 +195,7 @@ Launch the schema explorer UI (Drizzle Studio):
 npx drizzle-kit studio
 ```
 
-📦 Update your `package.json` with custom scripts for convenience:
+Update your `package.json` with custom scripts for convenience:
 
 ```json
 "scripts": {
@@ -208,15 +211,14 @@ npx drizzle-kit studio
 
 ### 5. **Usage Workflow**
 
-- ✅ Register/Login using **Clerk**
-- 🎯 Select your job position and relevant skills
-- 🤖 Get AI-generated questions using **Gemini API**
-- 🎤 Record your answers via microphone
-- 🧠 Audio is sent to Flask backend, transcribed using **Whisper**
-- 📝 Get feedback on:
+* Register/Login using **Clerk**
+* Select your job position and relevant skills
+* Get AI-generated questions using **Gemini API**
+* Record your answers via microphone
+* Audio is sent to Flask backend, transcribed using **Whisper**
+* Get feedback on:
 
-  - Filler words
-  - Confidence score
-  - Quality of answers (via Gemini)
-
-- 📊 View performance and feedback on the dashboard
+  * Filler words
+  * Confidence score
+  * Quality of answers (via Gemini)
+* View performance and feedback on the dashboard
