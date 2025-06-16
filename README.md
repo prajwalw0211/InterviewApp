@@ -50,7 +50,7 @@ The goal is to improve candidates' preparedness and boost confidence before faci
 ### 🧰 Dev Tools & Services
 
 - **PostgreSQL (Neon)** – Serverless, scalable cloud Postgres database.
-- **OpenAI API (Gemini AI / GPT)** – For question generation and feedback scoring.
+- **Gemini API** – For question generation and feedback scoring.
 
 ---
 
